@@ -1,0 +1,123 @@
+﻿@model IEnumerable<WebClient.DTOs.ReadDTOs>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<div id="studentsTable">
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Role)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Password)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+</div>
+@* Dưới đây là ajax *@
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+@section Scripts {
+    <script>
+            function loadStudents(keyword, pageNumber = 1, pageSize = 5) {
+            $.ajax({
+                url: '@Url.Action("Index", "Student")',
+                // Chữ Products đó tùy thuộc vào AbortController còn của tui là ProductsController đó là xong
+                type: 'GET',
+                data: {
+                    keyword: keyword,
+                    pageNumber: pageNumber,
+                    pageSize: pageSize
+                },
+                success: function (response) {
+                    var newContent = $(response).find('#studentsTable').html();
+                    $('#studentsTable').html(newContent);
+
+                    var newPagination = $(response).find('nav[aria-label="Page navigation"]').html();
+                    $('nav[aria-label="Page navigation"]').html(newPagination);
+
+                    attachPaginationEvents(); // Gắn lại sự kiện sau khi thay DOM
+                },
+                error: function () {
+                    alert('Lỗi khi tải dữ liệu.');
+                }
+            });
+        }
+
+        function attachPaginationEvents() {
+            $('nav[aria-label="Page navigation"] .page-link').off('click').on('click', function (e) {
+                e.preventDefault();
+                var url = $(this).attr('href');
+                if (url) {
+                    var params = new URLSearchParams(url.split('?')[1]);
+                    var keyword = $('#keywordInput').val();
+                    var pageNumber = params.get('pageNumber') || 1;
+                    var pageSize = params.get('pageSize') || 10;
+
+                    loadStudents(keyword, pageNumber, pageSize);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $('#searchForm').submit(function (e) {
+                e.preventDefault();
+                var keyword = $('#keywordInput').val();
+                loadStudents(keyword);
+            });
+
+            attachPaginationEvents(); // Gắn sự kiện ngay khi trang load lần đầu
+        });
+
+    </script>
+}

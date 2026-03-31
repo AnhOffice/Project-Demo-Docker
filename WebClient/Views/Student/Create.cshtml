@@ -1,0 +1,93 @@
+﻿@model WebClient.DTOs.CreateDTOs
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div id="message" class="mt-2 text-success" style="display:none;"></div>
+
+<h1>Create</h1>
+
+<h4>UserEntity</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" id="createStudentForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FullName" class="control-label"></label>
+                <input asp-for="FullName" class="form-control" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Role" class="control-label"></label>
+                <input asp-for="Role" class="form-control" />
+                <span asp-validation-for="Role" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            $('#createStudentForm').submit(function (e) {
+                e.preventDefault(); // Ngăn reload mặc định
+
+                var form = $(this);
+                var formData = form.serialize(); // Lấy dữ liệu từ input
+
+                $.ajax({
+                    url: form.attr('action'), // mặc định là /Students/Create
+                    method: 'POST',
+                    data: formData,
+        success: function (result) {
+            if (result.success && result.studentId) {
+                window.location.href = '@Url.Action("Index", "Student")';
+            } else if (result.redirectTo) {
+                window.location.href = result.redirectTo;
+            } else {
+                $('#message').text('Không thể tạo sinh viên.').removeClass("text-success").addClass("text-danger").show();
+            }
+        },
+                    error: function (xhr) {
+                        if (xhr.status === 400) {
+                            $('#message').removeClass("text-success").addClass("text-danger")
+                                .text('Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.').show();
+                        } else {
+                            $('#message').removeClass("text-success").addClass("text-danger")
+                                .text('Đã có lỗi xảy ra.').show();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,119 @@
+﻿@model WebClient.DTOs.UpdateDTOs
+
+@{
+    ViewData["Title"] = "Edit";
+     // set ở controller GET
+}
+<h1>Edit</h1>
+
+<div id="editMessage" class="mt-2 text-success" style="display:none;"></div>
+
+<h4>UserEntity</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" id="editForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FullName" class="control-label"></label>
+                <input asp-for="FullName" class="form-control" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Role" class="control-label"></label>
+                <input asp-for="Role" class="form-control" />
+                <span asp-validation-for="Role" class="text-danger"></span>
+            </div>
+           
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            $('#editForm').submit(function (e) {
+                e.preventDefault(); // Ngăn form submit mặc định
+
+                var form = $(this);
+                var formData = form.serialize();
+                var actionUrl = form.attr('action');
+
+                $.ajax({
+                    url: actionUrl,
+                    type: 'POST',
+                    data: formData,
+                    success: function () {
+                        $('#editMessage')
+                            .removeClass('text-danger')
+                            .addClass('text-success')
+                            .text('Cập nhật sinh viên thành công!')
+                            .show();
+                    },
+                    // error: function (xhr) {
+                    //     let msg = 'Đã xảy ra lỗi.';
+
+                    //     if (xhr.status === 400) {
+                    //         msg = 'Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.';
+                    //     }
+
+                    //     $('#editMessage')
+                    //         .removeClass('text-success')
+                    //         .addClass('text-danger')
+                    //         .text(msg)
+                    //         .show();
+                    // }
+                            error: function (xhr) {
+            $('#editMessage')
+                .removeClass('text-success')
+                .addClass('text-danger');
+
+            if (xhr.status === 400 && xhr.responseJSON) {
+                const errors = xhr.responseJSON;
+                let msg = 'Dữ liệu không hợp lệ:\n';
+
+                for (const key in errors) {
+                    msg += `- ${errors[key].join(', ')}\n`;
+                    $(`[name="${key}"]`)
+                        .addClass('is-invalid')
+                        .after(`<div class="text-danger">${errors[key].join(', ')}</div>`);
+                }
+
+                $('#editMessage').text(msg).show();
+            } else {
+                $('#editMessage').text('Đã xảy ra lỗi.').show();
+            }
+        }
+
+                });
+            });
+        });
+    </script>
+}
