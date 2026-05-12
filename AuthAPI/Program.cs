@@ -10,8 +10,12 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<AuthenticationAPIContext>(options
-    => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddDbContext<AuthenticationAPIContext>(options
+//    => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddDbContext<AuthenticationAPIContext>(options =>
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("PostgresConnection")));
 
 builder.Services.AddScoped(typeof(IAuthRepository), typeof(AuthRepository));
 

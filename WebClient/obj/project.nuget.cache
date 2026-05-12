@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vreSXi4Fqr0=",
+  "dgSpecHash": "vAzDZFADCmQ=",
   "success": true,
-  "projectFilePath": "D:\\CodeProject\\Docker\\Demo_Docker\\WebClient\\WebClient.csproj",
+  "projectFilePath": "D:\\CodeProject\\CodeDEMO\\Project-Demo-Docker\\WebClient\\WebClient.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ADMIN\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\ADMIN\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
