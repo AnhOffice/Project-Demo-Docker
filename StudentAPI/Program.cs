@@ -10,8 +10,12 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<StudentDBContext>(options
-    => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddDbContext<StudentDBContext>(options
+//    => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddDbContext<StudentDBContext>(options =>
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("PostgresConnection")));
 
 builder.Services.AddScoped(typeof(ICommonRepository<,>), typeof(CommonRepository<,>));
 builder.Services.AddScoped(typeof(IStudentService), typeof(StudentService));

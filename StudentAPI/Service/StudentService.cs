@@ -19,7 +19,7 @@ namespace StudentAPI.Service
         public async Task<ReadDTOs> CreateAsync(CreateDTOs dto)
         {
             var student = _mapper.Map<Student>(dto);
-            student.CreatedAt = DateTime.Now;
+            student.CreatedAt = DateTime.UtcNow;
             await _commonRepository.Add(student);
             return _mapper.Map<ReadDTOs>(student);
         }
