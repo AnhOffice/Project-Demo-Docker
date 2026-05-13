@@ -14,6 +14,8 @@ obj/
 *.log
 
 # Secrets
+appsettings.json
 appsettings.Development.json
+appsettings.*.json
 secrets.json
 .env
