@@ -17,5 +17,7 @@ obj/
 appsettings.json
 appsettings.Development.json
 appsettings.*.json
+!**/appsettings.example.json
+
 secrets.json
 .env
